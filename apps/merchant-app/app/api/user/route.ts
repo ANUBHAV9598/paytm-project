@@ -10,15 +10,23 @@ export const GET = async () => {
         })
     }
 
-    const users = await client.user.findMany({
-        select: {
-            id: true,
-            email: true,
-            name: true,
-        },
-        take: 5,
-    });
-    return NextResponse.json({
-        users,
-    })
+    try {
+        const users = await client.user.findMany({
+            select: {
+                id: true,
+                email: true,
+                name: true,
+            },
+            take: 5,
+        });
+        return NextResponse.json({
+            users,
+        })
+    } catch (error) {
+        console.warn("Failed to fetch users in /api/user:", error);
+        return NextResponse.json({
+            users: [],
+            message: "Database unavailable",
+        })
+    }
 }
